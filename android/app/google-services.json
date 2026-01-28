@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "611859731534",
+    "project_id": "absensi-dago",
+    "storage_bucket": "absensi-dago.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611859731534:android:6e2b08bfdca2384c53df1f",
+        "android_client_info": {
+          "package_name": "com.example.absensi_dago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611859731534-krkr2kpt0k08bjsn6hjnb2u6s4bvtice.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.absensi_dago",
+            "certificate_hash": "d4ac1ee5b95d643aa6da0ffdcd9c3e3a318b2c13"
+          }
+        },
+        {
+          "client_id": "611859731534-cvti2986mdj4jacdcnpmq1pkp5rn23en.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgiGmbiL2saA41nOHKg6wEBz9xhCOISIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611859731534-cvti2986mdj4jacdcnpmq1pkp5rn23en.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
