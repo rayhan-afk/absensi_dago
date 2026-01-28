@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:absensi_dago/services/auth_service.dart'; // Sesuaikan nama paketmu
-import 'package:absensi_dago/pages/attendance_page.dart'; // Pastikan path ini benar nanti
+import 'package:absensi_dago/services/auth_service.dart'; // Pastikan path ini benar
 
 class LoginPage extends StatefulWidget {
   @override
@@ -12,64 +11,173 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Mengambil warna dari Theme yang sudah diset di main.dart
+    final primaryColor = Theme.of(context).primaryColor; // 0xFF0D47A1
+
     return Scaffold(
+      // Background Putih Bersih (Sesuai tema main.dart)
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo atau Gambar (Opsional)
-            Icon(Icons.access_time_filled, size: 100, color: Colors.blue),
-            SizedBox(height: 20),
-            Text(
-              "Absensi Dago",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 50),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Spacer(flex: 1),
 
-            // Tombol Login
-            _isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
-                      ),
-                      elevation: 2,
+              // --- BAGIAN HEADER ---
+              Column(
+                children: [
+                  Text(
+                    "Absensi Dago",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w800,
+                      color: primaryColor, // Warna Biru Tua
+                      letterSpacing: -0.5,
                     ),
-                    icon: Image.network(
-                      'https://img.icons8.com/color/48/000000/google-logo.png', // Ikon Google
-                      height: 24,
-                    ),
-                    label: Text("Masuk dengan Google"),
-                    onPressed: () async {
-                      setState(() => _isLoading = true);
-
-                      final user = await AuthService.signInWithGoogle();
-
-                      setState(() => _isLoading = false);
-
-                      if (user != null) {
-                        // Berhasil Login -> Pindah ke Halaman Absen
-                        // (Nanti kita ganti logic ini di main.dart biar otomatis)
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Selamat datang, ${user.displayName}!",
-                            ),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Gagal Login / Dibatalkan")),
-                        );
-                      }
-                    },
                   ),
-          ],
+                  SizedBox(height: 8),
+                  Text(
+                    "Welcome back, Ohana!\nAttendance made easy.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ),
+
+              Spacer(flex: 1),
+
+              // --- PENGGANTI GAMBAR STITCH ---
+              Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.blue[50], // Biru sangat muda
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.apartment_rounded, // Ikon Gedung Kantor
+                  size: 100,
+                  color: primaryColor,
+                ),
+              ),
+
+              Spacer(flex: 1),
+
+              // --- TOMBOL LOGIN ---
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : Container(
+                      width: double.infinity,
+                      height: 56, // Tinggi tombol disamakan dengan HTML (h-14)
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50), // Rounded Full
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          setState(() => _isLoading = true);
+
+                          // Proses Login
+                          final user = await AuthService.signInWithGoogle();
+
+                          // PERBAIKAN: Cek apakah halaman masih ada sebelum setState
+                          if (mounted) {
+                            setState(() => _isLoading = false);
+                          }
+
+                          // Jika gagal login & halaman masih ada, tampilkan pesan
+                          if (user == null && mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Login dibatalkan")),
+                            );
+                          }
+
+                          // Jika sukses, Navigasi otomatis dihandle oleh StreamBuilder di main.dart
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white, // Background Putih
+                          foregroundColor: Colors.black87, // Teks Hitam
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            side: BorderSide(
+                              color: Colors.grey.shade200,
+                            ), // Border halus
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Logo Google
+                            Image.network(
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1200px-Google_%22G%22_logo.svg.png',
+                              height: 24,
+                              width: 24,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.g_mobiledata, size: 24),
+                            ),
+                            SizedBox(width: 12),
+                            Text(
+                              "Masuk dengan Google",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+              SizedBox(height: 24),
+
+              // --- FOOTER (Secure Access) ---
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock_outline, size: 16, color: Colors.grey[500]),
+                  SizedBox(width: 6),
+                  Text(
+                    "Secure Corporate Access",
+                    style: TextStyle(
+                      color: Colors.grey[500],
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 10),
+
+              // Trouble Logging in
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Trouble logging in?",
+                  style: TextStyle(
+                    color: primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+
+              Spacer(flex: 1),
+            ],
+          ),
         ),
       ),
     );
